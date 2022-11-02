@@ -60,7 +60,11 @@ made by XiaFan
 
 ```{r}
 tmap_mode("plot")
-tm_shape(plottingdf) + 
+map <- tm_shape(plottingdf) + 
   tm_polygons("hdi_diff", title="HDI change") +
-  tm_layout(title = "HDI Change between 2010 and 2019", legend.position = c("left", "bottom"))
+  tm_layout(title = "Global HDI Change between 2010 and 2019", legend.position = c("left", "bottom")) + 
+  tm_compass(north=0, position=c(0.93,0.8)) +
+  tm_scale_bar(position=c(0.4,0.02), text.size=0.6)
+
+tmap_arrange(map,widths = 190)
 ```
