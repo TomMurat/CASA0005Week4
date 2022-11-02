@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Prepping Data for Plotting
 
-Calling the required libraries 
+Calling the required libraries
 
 ```{r cars}
 library(dplyr)
@@ -23,7 +23,7 @@ library(janitor)
 
 Read in the data, select the required columns and create a new column with the hdi difference
 
-``` {r}
+```{r}
 data <- read.csv(here::here(('HDR21-22_Composite_indices_complete_time_series.csv'))) %>%
   clean_names() %>%
   dplyr::select(starts_with("hdi_2010"), starts_with("hdi_2019"), starts_with("ISO")) %>%
@@ -37,16 +37,30 @@ shapefile <- st_read(here::here('World_Countries_(Generalized)','World_Countries
 ```
 
 Converts the ISO in the shapefile from ISO 2 character to ISO 3 character, which is the version in the dataset
+
 ```{r}
-shapefile$ISO <- countrycode(shapefile$ISO, origin = 'iso2c', destination = 'iso3c')
+shapefile$ISO3 <- countrycode(shapefile$ISO, origin = 'iso2c', destination = 'iso3c')
 ```
 
 Merge together the csv with the shapefile, ready for plotting
+
 ```{r}
 plottingdf <- shapefile %>%
     merge(., 
         data,
-        by.x = 'ISO',
+        by.x = 'ISO3',
         by.y = 'iso3')
+
+# plot(plottingdf)
 ```
 
+**Week 5 homework**
+
+made by XiaFan
+
+```{r}
+tmap_mode("plot")
+tm_shape(plottingdf) + 
+  tm_polygons("hdi_diff", title="HDI change") +
+  tm_layout(title = "HDI Change between 2010 and 2019", legend.position = c("left", "bottom"))
+```
